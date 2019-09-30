@@ -18,4 +18,8 @@ class Schedule extends Model
         return $this->belongsTo(Subject::class);
     }
 
+    public function period() {
+        return $this->belongsTo(Period::class);
+    }
+
 }

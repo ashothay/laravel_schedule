@@ -40,8 +40,10 @@
                             @endforeach
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-outline-primary">Update</button>
-                    <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                    <div class="float-right">
+                        <button type="submit" class="btn btn-outline-primary">Update</button>
+                        <a href="{{ route('users.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                    </div>
                 </form>
 
             </div>

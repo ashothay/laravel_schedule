@@ -77,7 +77,16 @@
             <div class="container">
                 @include('layouts._messages')
                 <div class="row justify-content-center">
-                    <aside class="col-md-4"></aside>
+                    <aside class="col-md-4">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <a href="{{ route('users.index') }}">Users</a>
+                            </li>
+                            <li class="list-group-item">
+                                <a href="{{ route('grades.index') }}">Classes</a>
+                            </li>
+                        </ul>
+                    </aside>
                     @yield('content')
                 </div>
             </div>
