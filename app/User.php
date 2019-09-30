@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Role\UserRole;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -130,5 +131,9 @@ class User extends Authenticatable
         if ($value) {
             $this->attributes['password'] = Hash::make($value);
         }
+    }
+    public function scopeTeachers($query) {
+        $teacherRole = UserRole::ROLE_TEACHER;
+        return $query->where('roles', 'LIKE', "%$teacherRole%");
     }
 }

@@ -6,8 +6,8 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Role\UserRole;
 use App\User;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -15,11 +15,16 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Factory|View
+     * @return View
      */
     public function index()
     {
-        return view('user.index')->with('users', User::all());
+        if (Auth::guest() || !Auth::user()->hasRole(UserRole::ROLE_ADMIN) ) {
+            $users = User::teachers()->get();
+        } else {
+            $users = User::all();
+        }
+        return view('user.index')->with('users', $users);
     }
 
     /**
