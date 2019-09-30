@@ -72,8 +72,15 @@
             </div>
         </nav>
 
+
         <main class="py-4">
-            @yield('content')
+            <div class="container">
+                @include('layouts._messages')
+                <div class="row justify-content-center">
+                    <aside class="col-md-4"></aside>
+                    @yield('content')
+                </div>
+            </div>
         </main>
     </div>
 </body>

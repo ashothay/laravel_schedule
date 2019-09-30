@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\CheckUserRole;
+use App\Role\RoleChecker;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 

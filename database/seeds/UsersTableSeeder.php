@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         factory(App\User::class, 10)->create()->each(function($user) {
-            $role_id = rand(0, 1);
+            $role_id = rand(0, 2);
             if ($role_id === 0) {
                 $role = UserRole::ROLE_ADMIN;
             } else {

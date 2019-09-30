@@ -53,6 +53,22 @@ class User extends Authenticatable
         return $this;
     }
 
+    /***
+     * @param string $role
+     * @return $this
+     */
+    public function removeRole($role)
+    {
+        $roles = $this->getRoles();
+        if (($key = array_search($role, $roles)) !== false) {
+            unset($roles[$key]);
+        }
+        $this->setRoles($roles);
+
+        return $this;
+    }
+
+
     /**
      * @param array $roles
      * @return $this
@@ -99,5 +115,18 @@ class User extends Authenticatable
         }
 
         return $roles;
+    }
+
+    public function setRoleAttribute($value)
+    {
+        $this->setRoles([$value]);
+    }
+
+    public function setRole($value)
+    {
+        if (!$value) {
+            return $this->setRoles([]);
+        }
+        return $this->setRoles([$value]);
     }
 }
