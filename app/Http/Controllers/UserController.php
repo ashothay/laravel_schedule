@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserCreateRequest;
+use App\Http\Requests\UserUpdateRequest;
+use App\Role\UserRole;
 use App\User;
-use Illuminate\Http\Request;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return Factory|View
      */
     public function index()
     {
@@ -23,27 +28,27 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.form')->with('user', new User())->with('roles', UserRole::getRoleList());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @param UserCreateRequest $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(UserCreateRequest $request)
     {
-        User::create($request)->setRole($request->role);
+        User::create($request->toArray());
 
-        return redirect()->route('users.index')->with('success', 'User successfully added');
+        return redirect()->route('users.index')->with('success', 'User successfully added!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @return void
      */
     public function show(User $user)
     {
@@ -53,26 +58,24 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\User $user
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @param User $user
+     * @return View
      */
     public function edit(User $user)
     {
-        return view('user.form')->with('user', $user);
+        return view('user.form')->with('user', $user)->with('roles', UserRole::getRoleList());
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\User $user
-     * @return \Illuminate\Http\RedirectResponse
+     * @param UserUpdateRequest $request
+     * @param User $user
+     * @return RedirectResponse
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        $user->update($request->only(['name', 'email', 'password']));
-        $user->setRole($request->role);
-        $user->save();
+        $user->update($request->toArray());
 
         return redirect()->route('users.index')->with('success', 'User successfully updated!');
     }
@@ -80,8 +83,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User $user
-     * @return \Illuminate\Http\RedirectResponse
+     * @param User $user
+     * @return RedirectResponse
      */
     public function destroy(User $user)
     {
