@@ -40,6 +40,7 @@
                 @empty
                     Users list is empty!
                 @endforelse
+                {{ $users->links() }}
             </div>
         </div>
     </div>

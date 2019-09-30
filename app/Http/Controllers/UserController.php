@@ -19,10 +19,11 @@ class UserController extends Controller
      */
     public function index()
     {
+        $perPage = 10;
         if (Auth::guest() || !Auth::user()->hasRole(UserRole::ROLE_ADMIN) ) {
-            $users = User::teachers()->get();
+            $users = User::teachers()->paginate($perPage);
         } else {
-            $users = User::all();
+            $users = User::paginate($perPage);
         }
         return view('user.index')->with('users', $users);
     }
