@@ -74775,9 +74775,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -74809,6 +74809,7 @@ function (_Component) {
       can_edit: false,
       can_delete: false
     };
+    _this.onDelete = _this.onDelete.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -74850,19 +74851,30 @@ function (_Component) {
       }
     }
   }, {
-    key: "onLessonDelete",
-    value: function onLessonDelete(id) {
+    key: "onDelete",
+    value: function onDelete() {
       var _this3 = this;
 
+      axios__WEBPACK_IMPORTED_MODULE_4___default.a["delete"]("/grades/".concat(this.state.id)).then(function () {
+        _this3.props.history.push('/grades');
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    }
+  }, {
+    key: "onLessonDelete",
+    value: function onLessonDelete(id) {
+      var _this4 = this;
+
       axios__WEBPACK_IMPORTED_MODULE_4___default.a["delete"]("/lessons/".concat(id)).then(function () {
-        _this3.setState(function (state) {
+        _this4.setState(function (state) {
           return {
             _lessons: state._lessons.filter(function (lesson) {
               return lesson.id !== id;
             })
           };
         }, function () {
-          _this3.setState(function (state) {
+          _this4.setState(function (state) {
             return {
               lessons: lodash__WEBPACK_IMPORTED_MODULE_3___default.a.groupBy(state._lessons, 'weekday')
             };
@@ -74875,7 +74887,7 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this4 = this;
+      var _this5 = this;
 
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card"
@@ -74890,7 +74902,7 @@ function (_Component) {
         to: "/lessons/".concat(this.state.id, "/edit"),
         className: "btn btn-sm btn-outline-primary"
       }, "Edit"), this.state.can_delete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-        onClick: this.onLessonDelete,
+        onClick: this.onDelete,
         className: "btn btn-sm btn-outline-danger"
       }, "Delete"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "card-body"
@@ -74907,7 +74919,7 @@ function (_Component) {
           className: "font-weight-bold text-center mb-3"
         }, window.weekdayNames[weekday]), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "h-100 position-relative"
-        }, _this4.state.lessons[weekday] && _this4.state.lessons[weekday].map(function (lesson, i) {
+        }, _this5.state.lessons[weekday] && _this5.state.lessons[weekday].map(function (lesson, i) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
             key: lesson.id,
             className: classnames__WEBPACK_IMPORTED_MODULE_2___default()({
@@ -74916,18 +74928,18 @@ function (_Component) {
               'bg-primary': !(i % 2)
             }, 'schedule__lesson', 'd-flex', 'flex-column', 'justify-content-center', 'align-items-center', 'text-white'),
             style: {
-              height: (lesson.end_date - lesson.start_date) * 100 / _this4.state.schedule.duration + '%',
-              top: (lesson.start_date - _this4.state.schedule.starts_at) * 100 / _this4.state.schedule.duration + '%'
+              height: (lesson.end_date - lesson.start_date) * 100 / _this5.state.schedule.duration + '%',
+              top: (lesson.start_date - _this5.state.schedule.starts_at) * 100 / _this5.state.schedule.duration + '%'
             }
           }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
             className: "lead font-weight-bold"
           }, lesson.subject.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, lesson.teacher.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, lesson.starts_at, " - ", lesson.ends_at), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
-            to: "/lessons/".concat(lesson.id, "/edit?grade_id=").concat(_this4.state.id),
+            to: "/lessons/".concat(lesson.id, "/edit?grade_id=").concat(_this5.state.id),
             title: "Edit lesson.",
             className: "schedule__lesson-edit"
-          }), _this4.state.can_delete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+          }), _this5.state.can_delete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
             onClick: function onClick() {
-              return _this4.onLessonDelete(lesson.id);
+              return _this5.onLessonDelete(lesson.id);
             },
             title: "Delete lesson from Schedule.",
             className: "btn rounded-0 btn-danger schedule__lesson-delete"

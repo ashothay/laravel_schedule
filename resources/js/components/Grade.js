@@ -16,6 +16,8 @@ export default class Grade extends Component {
             can_edit: false,
             can_delete: false,
         };
+
+        this.onDelete = this.onDelete.bind(this);
     }
 
     componentDidMount() {
@@ -50,6 +52,16 @@ export default class Grade extends Component {
         }
     }
 
+    onDelete() {
+        axios.delete(`/grades/${this.state.id}`)
+            .then(() => {
+                this.props.history.push('/grades');
+            })
+            .catch(err => {
+                console.error(err)
+            });
+    }
+
     onLessonDelete(id) {
         axios.delete(`/lessons/${id}`)
             .then(() => {
@@ -81,7 +93,7 @@ export default class Grade extends Component {
                               className="btn btn-sm btn-outline-primary">Edit</Link>
                         }
                         {this.state.can_delete &&
-                        <button onClick={this.onLessonDelete} className="btn btn-sm btn-outline-danger">Delete</button>
+                        <button onClick={this.onDelete} className="btn btn-sm btn-outline-danger">Delete</button>
                         }
                     </div>
                 </div>
