@@ -34,11 +34,10 @@
                             <div class="h-100 position-relative">
                                 @foreach($grade->lessons->where('weekday', $weekday) as $i => $lesson)
                                     <div
-                                        href="{{ route('lessons.edit', $lesson->id) }}"
                                         class="schedule__lesson d-flex flex-column justify-content-center align-items-center text-white {{ $i % 2 ? 'bg-info' : 'bg-primary' }}  }} "
                                         style="
-                                            height: {{ (strtotime($lesson->ends_at) - strtotime($lesson->starts_at)) * 100 / $schedule['duration'] }}%;
-                                            top: {{ (strtotime($lesson->starts_at) - $schedule['starts_at']) * 100 / $schedule['duration'] }}%;
+                                            height: {{ ($lesson->end_date - $lesson->start_date) * 100 / $schedule['duration'] }}%;
+                                            top: {{ ($lesson->start_date - $schedule['starts_at']) * 100 / $schedule['duration'] }}%;
                                             ">
                                         <span class="lead font-weight-bold">{{ $lesson->subject->name }}</span>
                                         <small>{{ $lesson->teacher->name }}</small>

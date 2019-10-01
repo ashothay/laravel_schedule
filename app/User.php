@@ -12,6 +12,13 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['start_date', 'end_date'];
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array

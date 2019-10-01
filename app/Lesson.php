@@ -27,4 +27,12 @@ class Lesson extends Model
         return $this->belongsTo(Subject::class);
     }
 
+    public function getStartDateAttribute() {
+        return strtotime($this->starts_at);
+    }
+
+    public function getEndDateAttribute() {
+        return strtotime($this->ends_at);
+    }
+
 }
