@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Schedule extends Model
+class Lesson extends Model
 {
     public function grade() {
         return $this->belongsTo(Grade::class);
@@ -16,10 +16,6 @@ class Schedule extends Model
 
     public function subject() {
         return $this->belongsTo(Subject::class);
-    }
-
-    public function period() {
-        return $this->belongsTo(Period::class);
     }
 
 }

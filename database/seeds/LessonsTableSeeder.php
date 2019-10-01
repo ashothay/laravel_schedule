@@ -2,12 +2,12 @@
 
 use App\Grade;
 use App\Period;
-use App\Schedule;
+use App\Lesson;
 use App\Subject;
 use App\User;
 use Illuminate\Database\Seeder;
 
-class SchedulesTableSeeder extends Seeder
+class LessonsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -22,13 +22,17 @@ class SchedulesTableSeeder extends Seeder
         $subjectsCount = count($subjects);
         foreach (Grade::pluck('id') as $grade_id) {
             for ($weekday = 0; $weekday < 5; $weekday++) {
-                foreach(Period::all()->random(5)->pluck('id') as $period_id) {
-                    Schedule::create([
+                for ($starts_at = 28800; $starts_at < 56000; $starts_at += 3600) {
+                    if (rand(0, 2) !== 0) {
+                        continue;
+                    }
+                    Lesson::create([
                         'weekday' => $weekday,
                         'grade_id' => $grade_id,
                         'teacher_id' => $teachers[rand(0, $teachersCount - 1)],
                         'subject_id' => $subjects[rand(0, $subjectsCount - 1)],
-                        'period_id' => $period_id
+                        'starts_at' => date('H:i', $starts_at),
+                        'ends_at' => date('H:i', $starts_at + 2700),
                     ]);
                 }
             }

@@ -7,69 +7,48 @@
 
             <div class="card-body">
 
-                <table class="table table-bordered table-striped table-hover text-center">
-                    <thead>
-                    <tr>
-                        <td></td>
-                        @foreach([0,1,2,3,4] as $weekday)
-                            <td>{{ $weekday }}</td>
-                        @endforeach
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @php
-                        $lessonsByPeriod = $grade->schedule->groupBy('period_id')
-                    @endphp
-                    @foreach($periods as $period)
-                        @php
-                            if ($lessonsByPeriod->has($period->id)) {
-                                $periodLessons = $lessonsByPeriod[$period->id][0];
-                            } else {
-                                $periodLessons = null;
-                            }
-                        @endphp
-                        <tr>
-                            <td class="font-weight-bold">
-                                {{ $period->starts_at }} <br>
-                                - <br>
-                                {{ $period->ends_at }}
-                            </td>
-                            @php
-                                $lessonsByWeekday = $lessonsByPeriod[$period->id]->groupBy('weekday');
-                            @endphp
-                            @foreach([0,1,2,3,4] as $weekday)
-                                @php
-                                    if ($lessonsByWeekday->has($weekday)) {
-                                        $lesson = $lessonsByWeekday[$weekday][0];
-                                    } else {
-                                        $lesson = null;
-                                    }
-                                @endphp
-                                @if( isset($lesson))
-                                    <td>
-                                        <span class="font-weight-bold lead">{{ $lesson->subject->name }}</span> <br>
+                <div class="schedule d-flex align-items-stretch" style="height:800px">
+                    @foreach([0, 1, 2, 3, 4] as $weekday)
+                        <div class="d-flex flex-column flex-grow-1 border border-light">
+                            <div class="font-weight-bold text-center">{{ jddayofweek($weekday, 1) }}</div>
+                            <div class="h-100" style="position:relative">
+                                @foreach($grade->lessons->where('weekday', $weekday) as $i => $lesson)
+                                    <div
+                                        class="schedule__lesson d-flex flex-column justify-content-center align-items-center text-white {{ $i % 2 ? 'bg-info' : 'bg-primary' }}"
+                                        style="
+                                            height: {{ (strtotime($lesson->ends_at) - strtotime($lesson->starts_at)) * 100 / $schedule['duration'] }}%;
+                                            top: {{ (strtotime($lesson->starts_at) - $schedule['starts_at']) * 100 / $schedule['duration'] }}%;
+                                            ">
+                                        <span class="lead font-weight-bold">{{ $lesson->subject->name }}</span>
                                         <small>{{ $lesson->teacher->name }}</small>
-                                        <small>{{ $lesson->period->starts_at }}</small>
-                                        <small>{{ $lesson->weekday }}</small>
-                                        <br>
-                                        <a href="{{ route('schedules.edit', $lesson->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                        <button onclick="$('#delete-schedule-{{ $lesson->id }}').submit()" class="btn btn-sm btn-outline-danger">Remove</button>
-                                        <form id="delete-schedule-{{ $lesson->id }}"class="d-none" action="{{ route('schedules.destroy', $lesson->id) }}}" method="post">
-                                            @csrf
-                                            @method('DELETE')
-                                        </form>
-                                    </td>
-                                @else
-                                    <td></td>
-                                @endif
+                                        <small>{{ $lesson->starts_at }} - {{ $lesson->ends_at }}</small>
+                                    </div>
                             @endforeach
-                        </tr>
+                            </div>
+                        </div>
                     @endforeach
-                    </tbody>
-
-                </table>
+                </div>
 
             </div>
         </div>
     </div>
 @endsection
+@push('scripts')
+<script>
+    $(document).ready(function() {
+        var lessonMinHeight = 120;
+        $('.schedule').each(function() {
+            var lessonSmallestHeight = Infinity;
+            $(this).find('.schedule__lesson').each(function() {
+                var height = $(this).height();
+                if (height < lessonSmallestHeight ) {
+                    lessonSmallestHeight = height;
+                }
+            });
+            if (lessonSmallestHeight < lessonMinHeight) {
+                $(this).css('height', lessonMinHeight / lessonSmallestHeight * $(this).height() + 'px')
+            }
+        });
+    });
+</script>
+@endpush

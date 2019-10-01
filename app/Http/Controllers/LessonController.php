@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Grade;
-use App\Period;
-use App\Schedule;
+use App\Lesson;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
-class ScheduleController extends Controller
+class LessonController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\Response|\Illuminate\View\View
+     * @return \Illuminate\Contracts\View\Factory|Response|\Illuminate\View\View
      */
     public function index()
     {
@@ -22,7 +22,7 @@ class ScheduleController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -33,7 +33,7 @@ class ScheduleController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -49,18 +49,21 @@ class ScheduleController extends Controller
      */
     public function show($grade_id)
     {
-        $grade = Grade::with(['schedule.teacher', 'schedule.subject'])->findOrFail($grade_id);
-        return view('grade.show')->with('grade', $grade)->with('periods', Period::orderBy('starts_at', 'ASC')->get());
+        $grade = Grade::with(['lessons.teacher', 'lessons.subject'])->findOrFail($grade_id);
+        $periods = $grade->lessons()->select(['starts_at', 'ends_at'])->orderBy('starts_at')->toArray();
+        return view('grade.show')
+            ->with('grade', $grade)
+            ->with('periods', $periods);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Schedule $schedule
-     * @return \Illuminate\Http\Response
+     * @param Lesson $schedule
+     * @return Response
      * @internal param Grade $grade
      */
-    public function edit(Schedule $schedule)
+    public function edit(Lesson $schedule)
     {
         return view('schedule.form')
             ->with('schedule', $schedule);
@@ -71,7 +74,7 @@ class ScheduleController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Grade  $grade
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Grade $grade)
     {
@@ -81,10 +84,10 @@ class ScheduleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Schedule  $schedule
-     * @return \Illuminate\Http\Response
+     * @param Lesson $schedule
+     * @return Response
      */
-    public function destroy(Schedule $schedule)
+    public function destroy(Lesson $schedule)
     {
         $schedule->delete();
 

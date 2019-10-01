@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Grade;
-use App\Period;
 use Illuminate\Http\Request;
 
 class GradeController extends Controller
@@ -15,7 +14,8 @@ class GradeController extends Controller
      */
     public function index()
     {
-        return view('grade.index')->with('grades', Grade::all());
+        $grades = Grade::paginate(10);
+        return view('grade.index')->with('grades', $grades);
     }
 
     /**
@@ -48,8 +48,14 @@ class GradeController extends Controller
      */
     public function show($grade_id)
     {
-        $grade = Grade::with(['schedule.teacher', 'schedule.subject'])->findOrFail($grade_id);
-        return view('grade.show')->with('grade', $grade)->with('periods', Period::orderBy('starts_at', 'ASC')->get());
+        $grade = Grade::findOrFail($grade_id)->with('lessons')->first();
+        $starts_at = strtotime($grade->lessons->min('starts_at'));
+        $ends_at = strtotime($grade->lessons->max('ends_at'));
+        $duration = $ends_at - $starts_at;
+//        $periods = $grade->lessons()->select(['starts_at', 'ends_at'])->orderBy('starts_at')->get();
+        return view('grade.show')
+            ->with('grade', $grade)
+            ->with('schedule', compact('starts_at', 'ends_at', 'duration'));
     }
 
     /**

@@ -8,17 +8,18 @@
             <div class="card-body">
                 @forelse($grades as $grade)
                     <div class="media">
-                        <div class="media-body">
+                        <div class="media-body mb-2">
                             {{ $grade->name }}
                             <div class="float-right">
-                                <a href="{{ route('grades.show', $grade->id) }}" class="btn btn-outline-success">Show</a>
-                                <a href="{{ route('grades.edit', $grade->id) }}" class="btn btn-outline-primary">Edit</a>
+                                <a href="{{ route('grades.show', $grade->id) }}" class="btn btn-sm btn-outline-success">Show</a>
+                                <a href="{{ route('grades.edit', $grade->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                             </div>
                         </div>
                     </div>
                 @empty
                     Grades list is empty!
                 @endforelse
+                {{ $grades->links() }}
             </div>
         </div>
     </div>
