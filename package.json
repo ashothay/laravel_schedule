@@ -25,6 +25,8 @@
         "sass-loader": "^7.1.0"
     },
     "dependencies": {
+        "classnames": "^2.2.6",
+        "react-paginate": "^6.3.0",
         "react-router-dom": "^5.1.2"
     }
 }

@@ -136,4 +136,14 @@ class UserController extends Controller
         }
         return redirect()->route('users.index')->with('success', $message);
     }
+
+    /**
+     * Get all available UserRoles.
+     *
+     * @return RedirectResponse
+     */
+    public function roles()
+    {
+        return response()->json(['roles' => UserRole::getRoleList()]);
+    }
 }

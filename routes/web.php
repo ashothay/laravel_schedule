@@ -19,6 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/users/roles', 'UserController@roles')->name('users.roles');
 Route::resource('users', 'UserController');
 Route::resource('grades', 'GradeController');
 
