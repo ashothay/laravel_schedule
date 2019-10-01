@@ -8,6 +8,7 @@ use App\Role\UserRole;
 use App\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class UserController extends Controller
@@ -45,7 +46,9 @@ class UserController extends Controller
      */
     public function store(UserCreateRequest $request)
     {
-        User::create($request->toArray());
+        $data = $request->toArray();
+        $data['password'] = Hash::make($data['password']);
+        User::create($data);
 
         return redirect()->route('users.index')->with('success', 'User successfully added!');
     }
@@ -81,7 +84,9 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $request, User $user)
     {
-        $user->update($request->toArray());
+        $data = $request->toArray();
+        $data['password'] = Hash::make($data['password']);
+        $user->update($data);
 
         return redirect()->route('users.index')->with('success', 'User successfully updated!');
     }

@@ -126,12 +126,6 @@ class User extends Authenticatable
         return $this->setRoles([$value]);
     }
 
-    public function setPasswordAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['password'] = Hash::make($value);
-        }
-    }
     public function scopeTeachers($query) {
         $teacherRole = UserRole::ROLE_TEACHER;
         return $query->where('roles', 'LIKE', "%$teacherRole%");
