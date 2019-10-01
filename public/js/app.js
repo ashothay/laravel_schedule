@@ -74745,6 +74745,670 @@ window.axios.defaults.withCredentials = true;
 
 /***/ }),
 
+/***/ "./resources/js/components/Grade.js":
+/*!******************************************!*\
+  !*** ./resources/js/components/Grade.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Grade; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_4__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+
+var Grade =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(Grade, _Component);
+
+  function Grade(props) {
+    var _this;
+
+    _classCallCheck(this, Grade);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Grade).call(this, props));
+    _this.state = {
+      id: undefined,
+      name: '',
+      lessons: {},
+      _lessons: [],
+      schedule: {},
+      can_edit: false,
+      can_delete: false
+    };
+    _this.weekdayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return _this;
+  }
+
+  _createClass(Grade, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var newState = {};
+
+      if ('gradeId' in this.props) {
+        newState.id = this.props.gradeId;
+      } else if (this.props.match && this.props.match.params.id) {
+        newState.id = this.props.match.params.id;
+      }
+
+      this.setState(newState, this.getData);
+    }
+  }, {
+    key: "getData",
+    value: function getData() {
+      var _this2 = this;
+
+      if (this.state.id) {
+        axios__WEBPACK_IMPORTED_MODULE_4___default.a.get("/grades/".concat(this.state.id)).then(function (res) {
+          return res.data;
+        }).then(function (data) {
+          _this2.setState({
+            id: data.grade.id,
+            name: data.grade.name,
+            _lessons: data.grade.lessons,
+            lessons: lodash__WEBPACK_IMPORTED_MODULE_3___default.a.groupBy(data.grade.lessons, 'weekday'),
+            schedule: data.schedule,
+            can_edit: data.can_edit,
+            can_delete: data.can_delete,
+            can_create_lesson: data.can_create_lesson
+          });
+        })["catch"](function (err) {
+          console.error(err);
+        });
+      }
+    }
+  }, {
+    key: "onLessonDelete",
+    value: function onLessonDelete(id) {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_4___default.a["delete"]("/lessons/".concat(id)).then(function () {
+        _this3.setState(function (state) {
+          return {
+            _lessons: state._lessons.filter(function (lesson) {
+              return lesson.id !== id;
+            })
+          };
+        }, function () {
+          _this3.setState(function (state) {
+            return {
+              lessons: lodash__WEBPACK_IMPORTED_MODULE_3___default.a.groupBy(state._lessons, 'weekday')
+            };
+          });
+        });
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-header"
+      }, "Schedule of Class \"", this.state.name, "\"", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "float-right"
+      }, this.state.can_create_lesson && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/lessons/create?grade_id=".concat(this.state.id),
+        className: "btn btn-sm btn-outline-success"
+      }, "Add Lesson"), this.state.can_update && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/lessons/".concat(this.state.id, "/edit"),
+        className: "btn btn-sm btn-outline-primary"
+      }, "Edit"), this.state.can_delete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.onLessonDelete,
+        className: "btn btn-sm btn-outline-danger"
+      }, "Delete"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-body"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "schedule d-flex align-items-stretch",
+        style: {
+          height: 1310
+        }
+      }, [0, 1, 2, 3, 4].map(function (weekday) {
+        return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          key: weekday,
+          className: "d-flex flex-column flex-grow-1 border border-light"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "font-weight-bold text-center mb-3"
+        }, _this4.weekdayNames[weekday]), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "h-100 position-relative"
+        }, _this4.state.lessons[weekday] && _this4.state.lessons[weekday].map(function (lesson, i) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+            key: lesson.id,
+            className: classnames__WEBPACK_IMPORTED_MODULE_2___default()({
+              'bg-info': i % 2
+            }, {
+              'bg-primary': !(i % 2)
+            }, 'schedule__lesson', 'd-flex', 'flex-column', 'justify-content-center', 'align-items-center', 'text-white'),
+            style: {
+              height: (lesson.end_date - lesson.start_date) * 100 / _this4.state.schedule.duration + '%',
+              top: (lesson.start_date - _this4.state.schedule.starts_at) * 100 / _this4.state.schedule.duration + '%'
+            }
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
+            className: "lead font-weight-bold"
+          }, lesson.subject.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, lesson.teacher.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, lesson.starts_at, " - ", lesson.ends_at), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+            to: "/lessons/".concat(lesson.id, "/edit"),
+            title: "Edit lesson.",
+            className: "schedule__lesson-edit"
+          }), _this4.state.can_delete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+            onClick: function onClick() {
+              return _this4.onLessonDelete(lesson.id);
+            },
+            title: "Delete lesson from Schedule.",
+            className: "btn rounded-0 btn-danger schedule__lesson-delete"
+          }, "\xD7"));
+        })));
+      }))));
+    }
+  }]);
+
+  return Grade;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/GradeForm.js":
+/*!**********************************************!*\
+  !*** ./resources/js/components/GradeForm.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return GradeForm; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! classnames */ "./node_modules/classnames/index.js");
+/* harmony import */ var classnames__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(classnames__WEBPACK_IMPORTED_MODULE_3__);
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+var GradeForm =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(GradeForm, _Component);
+
+  function GradeForm(props) {
+    var _this;
+
+    _classCallCheck(this, GradeForm);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(GradeForm).call(this, props));
+    _this.state = {
+      "new": true,
+      id: undefined,
+      name: '',
+      errors: {}
+    };
+    _this.onNameChange = _this.onNameChange.bind(_assertThisInitialized(_this));
+    _this.onSubmit = _this.onSubmit.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(GradeForm, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var newState = {};
+
+      if ('gradeId' in this.props) {
+        newState.id = this.props.gradeId;
+        newState["new"] = false;
+      } else if (this.props.match && this.props.match.params.id) {
+        newState.id = this.props.match.params.id;
+        newState["new"] = false;
+      }
+
+      this.setState(newState, this.getData);
+    }
+  }, {
+    key: "getData",
+    value: function getData() {
+      var _this2 = this;
+
+      if (this.state.id) {
+        axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/grades/".concat(this.state.id, "/edit")).then(function (res) {
+          return res.data;
+        }).then(function (data) {
+          _this2.setState({
+            id: data.grade.id,
+            name: data.grade.name
+          });
+        })["catch"](function (err) {
+          console.error(err);
+        });
+      } else {
+        axios__WEBPACK_IMPORTED_MODULE_1___default.a.get("/grades/roles").then(function (res) {
+          return res.data;
+        }).then(function (data) {
+          _this2.setState(function (state) {
+            return {
+              allRoles: data.roles || []
+            };
+          });
+        })["catch"](function (err) {
+          console.error(err);
+        });
+      }
+    }
+  }, {
+    key: "onSubmit",
+    value: function onSubmit(e) {
+      var _this3 = this;
+
+      e.preventDefault();
+      var data = {
+        name: this.state.name,
+        email: this.state.email,
+        password: this.state.password,
+        password_confirmation: this.state.password_confirmation,
+        roles: this.state.roles
+      };
+
+      if (this.state["new"]) {
+        axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/grades", data).then(function () {
+          _this3.props.history.push("/grades");
+        })["catch"](function (err) {
+          _this3.setState({
+            errors: err.response.data.errors
+          });
+        });
+      } else {
+        data.id = this.state.id;
+        axios__WEBPACK_IMPORTED_MODULE_1___default.a.put("/grades/".concat(this.state.id), data).then(function () {
+          _this3.props.history.push("/grades");
+        })["catch"](function (err) {
+          _this3.setState({
+            errors: err.response.data.errors
+          });
+        });
+      }
+    }
+  }, {
+    key: "onNameChange",
+    value: function onNameChange(e) {
+      e.persist();
+      this.setState({
+        name: e.target.value
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-header"
+      }, this.state["new"] ? 'New Class' : "Editing Class \"".concat(this.state.name, "\"")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "card-body"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+        onSubmit: this.onSubmit
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "form-group"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", {
+        htmlFor: "grade-name-input"
+      }, "Name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
+        id: "grade-name-input",
+        type: "text",
+        name: "name",
+        value: this.state.name,
+        onChange: this.onNameChange,
+        className: classnames__WEBPACK_IMPORTED_MODULE_3___default()('form-control', {
+          'is-invalid': this.state.errors.name
+        })
+      }), this.state.errors.name && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "invalid-feedback"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, this.state.errors.name))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "float-right"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        type: "submit",
+        className: "btn btn-outline-primary"
+      }, this.state.id ? 'Update' : 'Register'), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Link"], {
+        to: "/grades",
+        className: "btn btn-outline-secondary"
+      }, "Cancel"))))));
+    }
+  }]);
+
+  return GradeForm;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/GradeList.js":
+/*!**********************************************!*\
+  !*** ./resources/js/components/GradeList.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return GradeList; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _GradeListItem__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./GradeListItem */ "./resources/js/components/GradeListItem.js");
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+/* harmony import */ var querystring__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! querystring */ "./node_modules/querystring-es3/index.js");
+/* harmony import */ var querystring__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(querystring__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_paginate__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-paginate */ "./node_modules/react-paginate/dist/index.js");
+/* harmony import */ var react_paginate__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_paginate__WEBPACK_IMPORTED_MODULE_6__);
+
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+
+
+
+
+var GradeList =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(GradeList, _Component);
+
+  function GradeList(props) {
+    var _this;
+
+    _classCallCheck(this, GradeList);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(GradeList).call(this, props));
+    _this.state = {
+      grades: [],
+      pageCount: 1,
+      currentPage: 1
+    };
+    _this.onPageClick = _this.onPageClick.bind(_assertThisInitialized(_this));
+    return _this;
+  }
+
+  _createClass(GradeList, [{
+    key: "onGradeDelete",
+    value: function onGradeDelete(id) {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a["delete"]("/grades/".concat(id, "?page=").concat(this.state.currentPage)).then(function () {
+        _this2.setState({
+          grades: _this2.state.grades.filter(function (grade) {
+            return grade.id !== id;
+          })
+        });
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    }
+  }, {
+    key: "onPageClick",
+    value: function () {
+      var _onPageClick = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(data) {
+        var page;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                page = data.selected >= 0 ? data.selected + 1 : 0;
+                this.setState({
+                  currentPage: page
+                }, this.getData);
+
+              case 2:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function onPageClick(_x) {
+        return _onPageClick.apply(this, arguments);
+      }
+
+      return onPageClick;
+    }()
+  }, {
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var page = Number(querystring__WEBPACK_IMPORTED_MODULE_5___default.a.parse(this.props.location.search.substr(1)).page);
+      this.setState({
+        currentPage: page || 1
+      }, this.getData);
+    }
+  }, {
+    key: "getData",
+    value: function getData() {
+      var _this3 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_2___default.a.get("/grades?page=".concat(this.state.currentPage)).then(function (res) {
+        return [_this3.setState({
+          grades: res.data.grades.data,
+          can_create: res.data.can_create,
+          currentPage: res.data.grades.current_page,
+          pageCount: res.data.grades.last_page
+        })];
+      })["catch"](function (err) {
+        console.error(err);
+      });
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      var _this4 = this;
+
+      return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "card"
+      }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "card-header"
+      }, "Classes", react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "float-right"
+      }, this.state.can_create && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_4__["Link"], {
+        to: "/grades/create",
+        className: "btn btn-sm btn-outline-success"
+      }, "Add class"))), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+        className: "card-body"
+      }, this.state.grades.map(function (grade) {
+        return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_GradeListItem__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          grade: grade,
+          onDelete: function onDelete() {
+            return _this4.onGradeDelete(grade.id);
+          },
+          key: grade.id
+        });
+      }), this.state.pageCount > 1 && react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react_paginate__WEBPACK_IMPORTED_MODULE_6___default.a, {
+        pageCount: this.state.pageCount,
+        initialPage: this.state.currentPage - 1,
+        forcePage: this.state.currentPage - 1,
+        pageRangeDisplayed: 4,
+        marginPagesDisplayed: 2,
+        previousLabel: "\u276E",
+        nextLabel: "\u276F",
+        containerClassName: "pagination justify-content-center",
+        pageClassName: "page-item",
+        pageLinkClassName: "page-link",
+        nextClassName: "page-item",
+        previousClassName: "page-item",
+        nextLinkClassName: "page-link",
+        previousLinkClassName: "page-link",
+        activeClassName: "active",
+        disabledClassName: "disabled",
+        onPageChange: this.onPageClick,
+        disableInitialCallback: true,
+        hrefBuilder: function hrefBuilder() {
+          return "#";
+        }
+      })));
+    }
+  }]);
+
+  return GradeList;
+}(react__WEBPACK_IMPORTED_MODULE_1__["Component"]);
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/GradeListItem.js":
+/*!**************************************************!*\
+  !*** ./resources/js/components/GradeListItem.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return GradeListItem; });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
+
+var GradeListItem =
+/*#__PURE__*/
+function (_Component) {
+  _inherits(GradeListItem, _Component);
+
+  function GradeListItem() {
+    _classCallCheck(this, GradeListItem);
+
+    return _possibleConstructorReturn(this, _getPrototypeOf(GradeListItem).apply(this, arguments));
+  }
+
+  _createClass(GradeListItem, [{
+    key: "render",
+    value: function render() {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "media mb-2"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "media-body"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/grades/".concat(this.props.grade.id)
+      }, this.props.grade.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "float-right"
+      }, this.props.grade.can_edit && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], {
+        to: "/grades/".concat(this.props.grade.id, "/edit"),
+        className: "btn btn-sm btn-outline-primary"
+      }, "Edit"), this.props.grade.can_delete && react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+        onClick: this.props.onDelete,
+        className: "btn btn-sm btn-outline-danger"
+      }, "Delete"))));
+    }
+  }]);
+
+  return GradeListItem;
+}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/UserForm.js":
 /*!*********************************************!*\
   !*** ./resources/js/components/UserForm.js ***!
@@ -75341,6 +76005,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
 /* harmony import */ var _components_UserList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/UserList */ "./resources/js/components/UserList.js");
 /* harmony import */ var _components_UserForm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/UserForm */ "./resources/js/components/UserForm.js");
+/* harmony import */ var _components_GradeList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/GradeList */ "./resources/js/components/GradeList.js");
+/* harmony import */ var _components_GradeForm__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/GradeForm */ "./resources/js/components/GradeForm.js");
+/* harmony import */ var _components_Grade__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/Grade */ "./resources/js/components/Grade.js");
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -75358,6 +76025,9 @@ function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.g
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+
+
 
 
 
@@ -75392,6 +76062,18 @@ function (_Component) {
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
         path: "/users",
         component: _components_UserList__WEBPACK_IMPORTED_MODULE_3__["default"]
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/grades/create",
+        component: _components_GradeForm__WEBPACK_IMPORTED_MODULE_6__["default"]
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/grades/:id/edit",
+        component: _components_GradeForm__WEBPACK_IMPORTED_MODULE_6__["default"]
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/grades/:id",
+        component: _components_Grade__WEBPACK_IMPORTED_MODULE_7__["default"]
+      }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], {
+        path: "/grades",
+        component: _components_GradeList__WEBPACK_IMPORTED_MODULE_5__["default"]
       }))));
     }
   }]);
