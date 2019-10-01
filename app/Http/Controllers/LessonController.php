@@ -7,22 +7,10 @@ use App\Http\Requests\LessonRequest;
 use App\Lesson;
 use App\Subject;
 use App\User;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\View;
 
 class LessonController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return View
-     */
-    public function index()
-    {
-        return view('grade.index')->with('grades', Grade::all());
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -30,7 +18,11 @@ class LessonController extends Controller
      */
     public function create()
     {
-        return view('grade.form')->with('grade', new Grade());
+        return view('lesson.form')
+            ->with('grades', Grade::query()->select(['id', 'name'])->get())
+            ->with('subjects', Subject::query()->select(['id', 'name'])->get())
+            ->with('teachers', User::query()->teachers()->select(['id', 'name', 'roles'])->get())
+            ->with('lesson', new Lesson());
     }
 
     /**
@@ -41,23 +33,9 @@ class LessonController extends Controller
      */
     public function store(LessonRequest $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param int $lesson_id
-     * @return View
-     * @internal param Lesson $lesson
-     */
-    public function show($lesson_id)
-    {
-        $lesson = Grade::with(['lessons.teacher', 'lessons.subject'])->findOrFail($lesson_id);
-        $periods = $lesson->lessons()->select(['starts_at', 'ends_at'])->orderBy('starts_at')->toArray();
-        return view('grade.show')
-            ->with('grade', $lesson)
-            ->with('periods', $periods);
+        Lesson::create($request->toArray());
+        $gradeId = $request->get('grade_id');
+        return redirect()->route('grades.show', $gradeId)->with('success', 'Lesson successfully updated!');
     }
 
     /**

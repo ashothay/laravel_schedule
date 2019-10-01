@@ -7,8 +7,11 @@
                 Schedule of Class {{ $grade->name }}
 
                 <div class="float-right">
+                    @can('create', App\Lesson::class)
+                        <a href="{{ route('lessons.create') }}" class="btn btn-sm btn-outline-success">Add Lesson</a>
+                    @endcan
                     @can('update', $grade)
-                        <a href="{{ route('grades.edit', $grade->id) }}" class="btn btn-sm btn-outline-success">Edit</a>
+                        <a href="{{ route('grades.edit', $grade->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
                     @endcan
                     @can('delete', $grade)
                         <button onclick="$('#delete-class-{{ $grade->id }}').submit()"

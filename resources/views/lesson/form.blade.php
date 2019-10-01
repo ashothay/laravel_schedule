@@ -3,7 +3,7 @@
 @section('content')
     <div class="col-md-8 col-xs-12">
         <div class="card">
-            <div class="card-header">Teachers</div>
+            <div class="card-header">{{$lesson->id ? "Edit Lesson \"{$lesson->name}\"" : 'New Lesson'}}</div>
 
             <div class="card-body">
 
@@ -100,8 +100,13 @@
                         @enderror
                     </div>
                     <div class="float-right">
-                        <button type="submit" class="btn btn-outline-primary">Update</button>
-                        <a href="{{ route('grades.show', $lesson->grade_id) }}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-outline-primary">{{ $lesson->grade_id ? 'Update' : 'Create' }}</button>
+                        @if ($lesson->grade_id)
+                            <a href="{{ route('grades.show', $lesson->grade_id) }}" class="btn btn-outline-secondary">Cancel</a>
+                        @else
+                            <a href="{{ route('grades.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                        @endif
+
                     </div>
                 </form>
 

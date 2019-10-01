@@ -22,6 +22,8 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::resource('users', 'UserController');
 Route::resource('grades', 'GradeController');
 
+Route::get('lessons/create', 'LessonController@create')->name('lessons.create');
+Route::post('lessons', 'LessonController@store')->name('lessons.store');
 Route::put('lessons/{lesson}', 'LessonController@update')->name('lessons.update');
 Route::get('lessons/{lesson}/edit', 'LessonController@edit')->name('lessons.edit');
 Route::delete('lessons/{lesson}', 'LessonController@destroy')->name('lessons.destroy');
