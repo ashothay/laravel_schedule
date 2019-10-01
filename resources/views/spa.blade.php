@@ -1,5 +1,4 @@
-@extends('layouts.app')
-
+@extends('layouts.empty')
 @section('content')
-    <div id="app" class="col-md-8"></div>
+    <div id="app"></div>
 @endsection

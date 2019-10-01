@@ -11,8 +11,18 @@
 |
 */
 
+if (!request()->ajax()) {
+    Route::get('/{any}', function () {
+        return view('spa');
+    })->where('any', '.*');
+}
+
 Route::get('/', function () {
-    return view('spa');
+    return view('home');
+});
+
+Route::get('/base-info', function () {
+    return response()->json(['app_name' => config('app.name', 'School Schedule'), 'user' => Auth::guest() ? null : Auth::user()]);
 });
 
 Auth::routes();
