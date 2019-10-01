@@ -27,6 +27,7 @@ class GradeController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Grade::class);
         return view('grade.form')->with('grade', new Grade());
     }
 
@@ -70,6 +71,7 @@ class GradeController extends Controller
      */
     public function edit(Grade $grade)
     {
+        $this->authorize('update', $grade);
         return view('grade.form')->with('grade', $grade);
     }
 
@@ -95,6 +97,7 @@ class GradeController extends Controller
      */
     public function destroy(Grade $grade)
     {
+        $this->authorize('delete', $grade);
         $grade->delete();
 
         return redirect()->route('grades.index')->with('success', 'Class successfully deleted!');

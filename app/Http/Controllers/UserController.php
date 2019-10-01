@@ -35,6 +35,7 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', User::class);
         return view('user.form')->with('user', new User())->with('roles', UserRole::getRoleList());
     }
 
@@ -72,6 +73,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('update', $user);
         return view('user.form')->with('user', $user)->with('roles', UserRole::getRoleList());
     }
 
@@ -99,6 +101,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->authorize('delete', $user);
         $user->delete();
 
         return redirect()->route('users.index')->with('success', 'User successfully deleted!');

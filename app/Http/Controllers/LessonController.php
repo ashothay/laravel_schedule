@@ -18,6 +18,7 @@ class LessonController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Lesson::class);
         return view('lesson.form')
             ->with('grades', Grade::query()->select(['id', 'name'])->get())
             ->with('subjects', Subject::query()->select(['id', 'name'])->get())
@@ -47,6 +48,7 @@ class LessonController extends Controller
      */
     public function edit(Lesson $lesson)
     {
+        $this->authorize('update', $lesson);
         return view('lesson.form')
             ->with('grades', Grade::query()->select(['id', 'name'])->get())
             ->with('subjects', Subject::query()->select(['id', 'name'])->get())
@@ -63,6 +65,7 @@ class LessonController extends Controller
      */
     public function update(LessonRequest $request, Lesson $lesson)
     {
+        $this->authorize('update', $lesson);
         $lesson->update($request->toArray());
         $gradeId = $request->get('grade_id', $lesson->grade_id);
         return redirect()->route('grades.show', $gradeId)->with('success', 'Lesson successfully updated!');
@@ -76,6 +79,7 @@ class LessonController extends Controller
      */
     public function destroy(Lesson $lesson)
     {
+        $this->authorize('delete', $lesson);
         $lesson->delete();
 
         return back()->with('success', 'Lesson successfully deleted!');
