@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('spa');
 });
 
 Auth::routes();
@@ -29,3 +29,4 @@ Route::prefix('lessons')->name('lessons.')->group(function() {
     Route::get('{lesson}/edit', 'LessonController@edit')->name('edit');
     Route::delete('{lesson}', 'LessonController@destroy')->name('destroy');
 });
+

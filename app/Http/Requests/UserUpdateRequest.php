@@ -25,11 +25,13 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $this->request = request()->merge(['roles' => []]);
+        if (!request()->has('roles')) {
+            $this->request = request()->merge(['roles' => []]);
+        }
 
         return [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . Auth::user()->id],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . request()->id],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
             'roles' => ['array'],
         ];

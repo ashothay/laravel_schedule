@@ -6,6 +6,7 @@ use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Role\UserRole;
 use App\User;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -25,6 +26,15 @@ class UserController extends Controller
             $users = User::teachers()->paginate($perPage);
         } else {
             $users = User::paginate($perPage);
+        }
+
+        if (request()->expectsJson()) {
+            $users->each(function(User $user) {
+                $user->setAttribute('can_edit', !Auth::guest() && Auth::user()->can('update', $user));
+                $user->setAttribute('can_delete', !Auth::guest() && Auth::user()->can('delete', $user));
+            });
+            $can_create = !Auth::guest() && Auth::user()->can('create', User::class);
+            return response()->json(compact('users', 'can_create'));
         }
         return view('user.index')->with('users', $users);
     }
@@ -70,11 +80,18 @@ class UserController extends Controller
      *
      * @param User $user
      * @return View
+     * @throws AuthorizationException
      */
     public function edit(User $user)
     {
         $this->authorize('update', $user);
-        return view('user.form')->with('user', $user)->with('roles', UserRole::getRoleList());
+
+        $roles = UserRole::getRoleList();
+
+        if (request()->expectsJson()) {
+            return response()->json(compact('user', 'roles'));
+        }
+        return view('user.form')->with('user', $user)->with('roles', $roles);
     }
 
     /**
@@ -87,10 +104,18 @@ class UserController extends Controller
     public function update(UserUpdateRequest $request, User $user)
     {
         $data = $request->toArray();
-        $data['password'] = Hash::make($data['password']);
+        if ($data['password']) {
+            $data['password'] = Hash::make($data['password']);
+        } else {
+            unset($data['password']);
+        }
         $user->update($data);
 
-        return redirect()->route('users.index')->with('success', 'User successfully updated!');
+        $message = 'User successfully updated!';
+        if (request()->expectsJson()) {
+            return response()->json(['success' => $message]);
+        }
+        return redirect()->route('users.index')->with('success', $message);
     }
 
     /**
@@ -98,12 +123,17 @@ class UserController extends Controller
      *
      * @param User $user
      * @return RedirectResponse
+     * @throws AuthorizationException
      */
     public function destroy(User $user)
     {
         $this->authorize('delete', $user);
         $user->delete();
 
-        return redirect()->route('users.index')->with('success', 'User successfully deleted!');
+        $message = 'User successfully deleted!';
+        if (request()->expectsJson()) {
+            return response()->json(['success' => $message]);
+        }
+        return redirect()->route('users.index')->with('success', $message);
     }
 }

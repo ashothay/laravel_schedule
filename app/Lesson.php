@@ -12,7 +12,7 @@ class Lesson extends Model
      * @var array
      */
     protected $appends = ['start_date', 'end_date'];
-    
+
     /**
      * The attributes that are mass assignable.
      *
