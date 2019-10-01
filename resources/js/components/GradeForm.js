@@ -114,7 +114,7 @@ export default class GradeForm extends Component {
                             </div>
                             <div className="float-right">
                                 <button type="submit"
-                                        className="btn btn-outline-primary">{ this.state.id ? 'Update' : 'Register'}</button>
+                                        className="btn btn-outline-primary">{ this.state.id ? 'Update' : 'Add'}</button>
                                 <Link to={`/grades`} className="btn btn-outline-secondary">Cancel</Link>
                             </div>
                         </form>

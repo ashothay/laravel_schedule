@@ -16,9 +16,6 @@ export default class Grade extends Component {
             can_edit: false,
             can_delete: false,
         };
-
-        this.weekdayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
     }
 
     componentDidMount() {
@@ -94,7 +91,7 @@ export default class Grade extends Component {
                     <div className="schedule d-flex align-items-stretch" style={{height: 1310}}>
                         {[0, 1, 2, 3, 4].map(weekday => (
                             <div key={weekday} className="d-flex flex-column flex-grow-1 border border-light">
-                                <div className="font-weight-bold text-center mb-3">{this.weekdayNames[weekday]}</div>
+                                <div className="font-weight-bold text-center mb-3">{window.weekdayNames[weekday]}</div>
                                 <div className="h-100 position-relative">
                                     {this.state.lessons[weekday] && this.state.lessons[weekday].map((lesson, i) => (
                                         <div
@@ -108,7 +105,7 @@ export default class Grade extends Component {
                                             <span className="lead font-weight-bold">{lesson.subject.name}</span>
                                             <small>{lesson.teacher.name}</small>
                                             <small>{lesson.starts_at} - {lesson.ends_at}</small>
-                                            <Link to={`/lessons/${lesson.id}/edit`} title="Edit lesson."
+                                            <Link to={`/lessons/${lesson.id}/edit?grade_id=${this.state.id}`} title="Edit lesson."
                                                   className="schedule__lesson-edit"/>
                                             {this.state.can_delete &&
                                             <button onClick={() => this.onLessonDelete(lesson.id)} title="Delete lesson from Schedule."

@@ -43,6 +43,9 @@ class LessonRequest extends FormRequest
             $start_date = strtotime($request->starts_at);
             $end_date = strtotime($request->ends_at);
             foreach ($lessons as $lesson) {
+                if ($lesson->id === $request->id) {
+                    continue;
+                }
                 if (($lesson->start_date <= $start_date && $start_date < $lesson->end_date) ||
                     ($lesson->start_date < $end_date && $end_date <= $lesson->end_date) ||
                     ($lesson->start_date >= $start_date && $end_date >= $lesson->end_date)) {
