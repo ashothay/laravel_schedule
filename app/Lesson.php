@@ -6,6 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Lesson extends Model
 {
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'weekday', 'grade_id', 'subject_id', 'teacher_id', 'starts_at', 'ends_at'
+    ];
+
     public function grade() {
         return $this->belongsTo(Grade::class);
     }

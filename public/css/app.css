@@ -10650,3 +10650,48 @@ a.text-dark:focus {
   position: absolute;
 }
 
+.schedule__lesson--uneditable {
+  cursor: default;
+  pointer-events: none;
+}
+
+.schedule__lesson:hover .schedule__lesson-delete {
+  opacity: 1;
+}
+
+.schedule__lesson-edit,
+.schedule__lesson-delete {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+}
+
+.schedule__lesson-edit:hover,
+.schedule__lesson-edit:focus,
+.schedule__lesson-delete:hover,
+.schedule__lesson-delete:focus {
+  text-decoration: none;
+}
+
+.schedule__lesson-edit {
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.schedule__lesson-delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2px;
+  width: 24px;
+  line-height: 1;
+  right: 0;
+  color: #fff;
+  font-weight: 900;
+  font-size: 20px;
+  z-index: 2;
+  transition: opacity 0.3s ease;
+}
+
